@@ -4,6 +4,7 @@ import streamlit as st
 import re
 import sys
 import io
+import pandas as pd
 
 # Define the keyword mapping using regular expressions
 keyword_mapping = {
@@ -452,12 +453,269 @@ def display_customization_guide():
 
     """)
 
+def display_tokenization_res_explanation():
+    st.write("""
+    ## Introduction
+
+    In the Simpy compiler, tokenization is the process of converting the input code into a sequence of tokens that can be analyzed and processed. Each token represents a meaningful element, such as a keyword, identifier, operator, or literal.
+
+    The tokenizer uses Regular Expressions (REs) to identify and classify these tokens. This page provides an in-depth explanation of each RE used in the tokenization process.
+
+    ## Token Specification
+
+    Below is the list of token types, their RE patterns, and descriptions.
+
+    """)
+
+    # Display Token Specification Table
+    token_data = [
+        {
+            "Token Type": name,
+            "Pattern": pattern,
+            "Description": description
+        }
+        for name, pattern, description in [
+            ('COMMENT',    r'#.*',                         'Matches comments starting with # and continuing to the end of the line.'),
+            ('NEWLINE',    r'\\n',                          'Matches newline characters.'),
+            ('SKIP',       r'[ \\t]+',                      'Matches one or more spaces or tabs (used to skip whitespace).'),
+            ('STRING',     r'(\'[^\']*\'|"[^"]*")',        'Matches string literals enclosed in single or double quotes.'),
+            ('NUMBER',     r'\\b\\d+(\\.\\d*)?\\b',             'Matches integers and decimal numbers.'),
+            ('OPERATOR',   r'==|!=|<=|>=|<>|<|>|[+\\-*/%=]', 'Matches operators like ==, !=, <=, >=, <>, <, >, +, -, *, /, %, =.'),
+            ('DELIMITER',  r'[\\(\\)\\[\\]\\{\\},:]',            'Matches delimiters like parentheses, brackets, braces, commas, and colons.'),
+            ('IDENTIFIER', r'\\b[a-zA-Z_][a-zA-Z_0-9]*\\b',  'Matches identifiers (variable names, function names) and keywords.'),
+            ('MISMATCH',   r'.',                           'Matches any other character (used to catch unexpected characters).'),
+        ]
+    ]
+    token_df = pd.DataFrame(token_data)
+    st.table(token_df)
+
+    st.write("""
+    ## Detailed Explanations
+
+    Below is a detailed explanation of each Regular Expression used in the tokenizer.
+
+    ### 1. COMMENT
+
+    **Pattern**: `#.*`
+
+    **Explanation**:
+
+    - `#`: Matches the hash symbol, which denotes the start of a comment in Simpy.
+    - `.*`: Matches any character (`.`) zero or more times (`*`), until the end of the line.
+    - **Usage**: This pattern matches comments that start with `#` and continue to the end of the line.
+
+    **Example**:
+
+    ```plaintext
+    # This is a comment
+    ```
+
+    ### 2. NEWLINE
+
+    **Pattern**: `\\n`
+
+    **Explanation**:
+
+    - `\\n`: Matches a newline character.
+    - **Usage**: This pattern matches the end of a line, which can be useful for keeping track of line numbers or handling line breaks.
+
+    **Example**:
+
+    ```plaintext
+    Line one
+    Line two
+    ```
+
+    ### 3. SKIP
+
+    **Pattern**: `[ \\t]+`
+
+    **Explanation**:
+
+    - `[ \\t]`: Character class matching a space (` `) or a tab (`\\t`).
+    - `+`: Matches one or more occurrences of the preceding pattern.
+    - **Usage**: This pattern matches whitespace (spaces and tabs) that can be skipped during tokenization.
+
+    **Example**:
+
+    ```plaintext
+    \t    (spaces and tabs)
+    ```
+
+    ### 4. STRING
+
+    **Pattern**: `('.*?'|".*?")`
+
+    **Explanation**:
+
+    - `'[^']*'`: Matches a single-quoted string.
+        - `'`: Matches the opening single quote.
+        - `[^']*`: Matches any character except a single quote, zero or more times.
+        - `'`: Matches the closing single quote.
+    - `"[^"]*"`: Matches a double-quoted string.
+        - `"`: Matches the opening double quote.
+        - `[^"]*`: Matches any character except a double quote, zero or more times.
+        - `"`: Matches the closing double quote.
+    - `('.*?'|".*?")`: Matches either a single-quoted or double-quoted string.
+    - **Usage**: This pattern matches string literals enclosed in quotes.
+
+    **Example**:
+
+    ```plaintext
+    'Hello, World!'
+    "Simpy is fun!"
+    ```
+
+    ### 5. NUMBER
+
+    **Pattern**: `\\b\\d+(\\.\\d*)?\\b`
+
+    **Explanation**:
+
+    - `\\b`: Word boundary to ensure we match whole numbers.
+    - `\\d+`: Matches one or more digits (0-9).
+    - `(\\.\\d*)?`: Optional group that matches a decimal point followed by zero or more digits.
+        - `\\.\\d*`: Matches a dot `.` followed by zero or more digits.
+        - `?`: Indicates that the entire group is optional.
+    - `\\b`: Ending word boundary.
+    - **Usage**: This pattern matches integers and decimal numbers.
+
+    **Examples**:
+
+    - `123`: Matches an integer.
+    - `3.14`: Matches a decimal number.
+    - `0.5`: Matches a decimal number starting with zero.
+
+    ### 6. OPERATOR
+
+    **Pattern**: `==|!=|<=|>=|<>|<|>|[+\\-*/%=]`
+
+    **Explanation**:
+
+    - `==|!=|<=|>=|<>|<|>`: Matches any of the comparison operators.
+    - `[+\\-*/%=]`: Character class matching arithmetic operators and the assignment operator `=`.
+        - The `\\` is used to escape special characters like `-` inside the character class.
+    - **Usage**: This pattern matches operators used in expressions and assignments.
+
+    **Examples**:
+
+    - Comparison operators: `==`, `!=`, `<=`, `>=`, `<`, `>`, `<>`
+    - Arithmetic operators: `+`, `-`, `*`, `/`, `%`
+    - Assignment operator: `=`
+
+    ### 7. DELIMITER
+
+    **Pattern**: `[\\(\\)\\[\\]\\{\\},:]`
+
+    **Explanation**:
+
+    - `[\\(\\)\\[\\]\\{\\},:]`: Character class matching any of the specified delimiters.
+        - `\\(` and `\\)`: Parentheses `(` and `)`.
+        - `\\[` and `\\]`: Square brackets `[` and `]`.
+        - `\\{` and `\\}`: Curly braces `{` and `}`.
+        - `,`: Comma.
+        - `:`: Colon.
+    - **Usage**: This pattern matches delimiters used in code structure.
+
+    **Examples**:
+
+    - Function definitions: `create func_name():`
+    - Lists and arrays: `[1, 2, 3]`
+    - Dictionaries: `{"key": "value"}`
+    - Function calls: `func_name(arg1, arg2)`
+
+    ### 8. IDENTIFIER
+
+    **Pattern**: `\\b[a-zA-Z_][a-zA-Z_0-9]*\\b`
+
+    **Explanation**:
+
+    - `\\b`: Starting word boundary.
+    - `[a-zA-Z_]`: Matches a single letter (uppercase or lowercase) or an underscore `_`.
+        - Ensures that identifiers start with a letter or underscore.
+    - `[a-zA-Z_0-9]*`: Matches zero or more letters, digits, or underscores.
+    - `\\b`: Ending word boundary.
+    - **Usage**: This pattern matches identifiers, which include variable names, function names, and keywords.
+
+    **Examples**:
+
+    - Valid identifiers: `variable`, `func_name`, `_privateVar`, `ClassName`, `num1`
+    - Note: Keywords (like `create`, `check`) are initially matched as identifiers and can be reclassified as keywords if needed.
+
+    ### 9. MISMATCH
+
+    **Pattern**: `.`
+
+    **Explanation**:
+
+    - `.`: Matches any single character except newline characters.
+    - **Usage**: This pattern is used to catch any unexpected or invalid characters that don't match any other token patterns.
+
+    **Example**:
+
+    - If an unexpected symbol like `@` or `$` appears in the code, it would be matched as a `MISMATCH`.
+
+    ## Examples of Tokenization
+
+    Let's see how these REs work with some Simpy code.
+
+    **Simpy Code Example**:
+
+    ```plaintext
+    create greet(name):
+        giveback "Hello " + name
+
+    message = greet("World")
+    display(message)
+    ```
+
+    **Tokenization Steps**:
+
+    - **Line 1**: `create greet(name):`
+        - `create`: IDENTIFIER (later reclassified as KEYWORD)
+        - `greet`: IDENTIFIER
+        - `(`: DELIMITER
+        - `name`: IDENTIFIER
+        - `)`: DELIMITER
+        - `:`: DELIMITER
+    - **Line 2**: `    giveback "Hello " + name`
+        - `giveback`: IDENTIFIER (later reclassified as KEYWORD)
+        - `"Hello "`: STRING
+        - `+`: OPERATOR
+        - `name`: IDENTIFIER
+    - **Line 4**: `message = greet("World")`
+        - `message`: IDENTIFIER
+        - `=`: OPERATOR
+        - `greet`: IDENTIFIER
+        - `(`: DELIMITER
+        - `"World"`: STRING
+        - `)`: DELIMITER
+    - **Line 5**: `display(message)`
+        - `display`: IDENTIFIER (later reclassified as KEYWORD)
+        - `(`: DELIMITER
+        - `message`: IDENTIFIER
+        - `)`: DELIMITER
+
+    **Notes**:
+
+    - Whitespace and newlines are skipped based on the `SKIP` and `NEWLINE` patterns.
+    - Comments (if any) would be ignored based on the `COMMENT` pattern.
+    - Keywords are initially matched as `IDENTIFIER` and can be reclassified based on a list of keywords.
+
+    ## Conclusion
+
+    Understanding the Regular Expressions used in the tokenizer helps in grasping how the Simpy compiler processes code. Each RE is carefully designed to match specific patterns in the code, ensuring accurate tokenization and paving the way for successful translation to Python.
+
+    If you have any questions or need further clarification on any of the REs, feel free to ask!
+    """)
+    
 # Main function to run the Streamlit app
 def main():
     st.title("Simpy Compiler and IDE")
 
     # Sidebar for navigation
-    page = st.sidebar.selectbox("Navigation", ["Simpy IDE", "Translation Process", "Tokenization Process", "Language Documentation", "Language Customization Guide"])
+    page = st.sidebar.selectbox("Navigation",  ["Simpy IDE", "Translation Process", "Tokenization Process", "Tokenization REs Explanation", "Language Documentation", "Language Customization Guide"]
+    )
 
     if page == "Simpy IDE":
         st.header("Simpy IDE")
@@ -569,6 +827,9 @@ def main():
         st.header("Language Customization Guide")
         display_customization_guide()
 
+    elif page == "Tokenization REs Explanation":
+        st.header("Tokenization Regular Expressions Explanation")
+        display_tokenization_res_explanation()
 
 if __name__ == "__main__":
     main()
