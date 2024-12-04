@@ -7,6 +7,102 @@ import io
 import pandas as pd
 
 # Define the keyword mapping using regular expressions
+# keyword_mapping = {
+#     # Control Keywords
+#     r'\bcheck\b': 'if',
+#     r'\balso\b': 'elif',
+#     r'\botherwise\b': 'else',
+#     r'\bloopwhile\b': 'while',
+#     r'\brepeat\b': 'for',
+#     r'\bbreak\b': 'break',      # Loop Control
+#     r'\bcontinue\b': 'continue',# Loop Control
+
+#     # Function Definition and Return
+#     r'\bcreate\b': 'def',
+#     r'\bgiveback\b': 'return',
+
+#     # Data Types
+#     r'\bwhole\b': 'int',
+#     r'\bdecimal\b': 'float',
+#     r'\btext\b': 'str',
+#     r'\bflag\b': 'bool',
+#     r'\barray\b': 'list',
+#     r'\bmap\b': 'dict',
+
+#     # Comparison Operators
+#     r'\bequals\b': '==',
+#     r'\bnotequals\b': '!=',
+#     r'\bgreater\b': '>',
+#     r'\bless\b': '<',
+#     r'\bgreaterequal\b': '>=',
+#     r'\blessequal\b': '<=',
+
+#     # Logical Values
+#     r'\byes\b': 'True',
+#     r'\bno\b': 'False',
+
+#     # Logical Operators
+#     r'\bboth\b': 'and',
+#     r'\beither\b': 'or',
+#     r'\bnothaving\b': 'not',
+
+#     # Exception Handling
+#     r'\battempt\b': 'try',
+#     r'\bhandle\b': 'except',
+#     r'\bafterall\b': 'finally',
+#     r'\btrigger\b': 'raise',
+#     r'\bensure\b': 'assert',
+
+#     # Variable Scope
+#     r'\buniversal\b': 'global',
+#     r'\bouter\b': 'nonlocal',
+
+#     # Functionality Keywords
+#     r'\banon\b': 'lambda',
+#     r'\bproduce\b': 'yield',
+#     r'\bskipop\b': 'pass',
+
+#     # Import Statements
+#     r'\binclude\b': 'import',
+#     r'\boutof\b': 'from',
+#     r'\balias\b': 'as',
+
+#     # Context Managers
+#     r'\busing\b': 'with',
+
+#     # Identity and Membership Operators
+#     r'\bbe\b': 'is',
+#     r'\bnotbe\b': 'is not',
+#     r'\binside\b': 'in',
+#     r'\boutside\b': 'not in',
+
+#     # Deletion of Objects
+#     r'\bremove\b': 'del',
+
+#     # Built-in Functions
+#     r'\bdisplay\b': 'print',
+#     r'\blength\b': 'len',
+#     r'\bgetinput\b': 'input',
+#     r'\bkind\b': 'type',
+#     r'\bseries\b': 'range',
+#     r'\btotal\b': 'sum',
+#     r'\bmaximum\b': 'max',
+#     r'\bminimum\b': 'min',
+#     r'\babsolute\b': 'abs',
+#     r'\bapproximate\b': 'round',
+#     r'\bitemize\b': 'enumerate',
+#     r'\bcombine\b': 'zip',
+#     r'\bapply\b': 'map',
+#     r'\bselect\b': 'filter',
+#     r'\barranged\b': 'sorted',
+#     r'\baccess\b': 'open',
+#     r'\bassist\b': 'help',
+#     r'\bisofkind\b': 'isinstance',
+#     r'\battributes\b': 'dir',
+
+#     # Class Definition
+#     r'\bblueprint\b': 'class',
+# }
 keyword_mapping = {
     # Control Keywords
     r'\bcheck\b': 'if',
@@ -14,8 +110,6 @@ keyword_mapping = {
     r'\botherwise\b': 'else',
     r'\bloopwhile\b': 'while',
     r'\brepeat\b': 'for',
-    r'\bbreak\b': 'break',      # Loop Control
-    r'\bcontinue\b': 'continue',# Loop Control
 
     # Function Definition and Return
     r'\bcreate\b': 'def',
@@ -25,96 +119,39 @@ keyword_mapping = {
     r'\bwhole\b': 'int',
     r'\bdecimal\b': 'float',
     r'\btext\b': 'str',
-    r'\bflag\b': 'bool',
     r'\barray\b': 'list',
     r'\bmap\b': 'dict',
 
     # Comparison Operators
     r'\bequals\b': '==',
-    r'\bnotequals\b': '!=',
     r'\bgreater\b': '>',
     r'\bless\b': '<',
-    r'\bgreaterequal\b': '>=',
-    r'\blessequal\b': '<=',
 
     # Logical Values
     r'\byes\b': 'True',
     r'\bno\b': 'False',
 
-    # Logical Operators
-    r'\bboth\b': 'and',
-    r'\beither\b': 'or',
-    r'\bnothaving\b': 'not',
-
-    # Exception Handling
-    r'\battempt\b': 'try',
-    r'\bhandle\b': 'except',
-    r'\bafterall\b': 'finally',
-    r'\btrigger\b': 'raise',
-    r'\bensure\b': 'assert',
-
-    # Variable Scope
-    r'\buniversal\b': 'global',
-    r'\bouter\b': 'nonlocal',
-
-    # Functionality Keywords
-    r'\banon\b': 'lambda',
-    r'\bproduce\b': 'yield',
-    r'\bskipop\b': 'pass',
-
-    # Import Statements
-    r'\binclude\b': 'import',
-    r'\boutof\b': 'from',
-    r'\balias\b': 'as',
-
-    # Context Managers
-    r'\busing\b': 'with',
-
-    # Identity and Membership Operators
-    r'\bbe\b': 'is',
-    r'\bnotbe\b': 'is not',
-    r'\binside\b': 'in',
-    r'\boutside\b': 'not in',
-
-    # Deletion of Objects
-    r'\bremove\b': 'del',
-
     # Built-in Functions
     r'\bdisplay\b': 'print',
-    r'\blength\b': 'len',
-    r'\bgetinput\b': 'input',
-    r'\bkind\b': 'type',
-    r'\bseries\b': 'range',
-    r'\btotal\b': 'sum',
-    r'\bmaximum\b': 'max',
-    r'\bminimum\b': 'min',
-    r'\babsolute\b': 'abs',
-    r'\bapproximate\b': 'round',
-    r'\bitemize\b': 'enumerate',
-    r'\bcombine\b': 'zip',
-    r'\bapply\b': 'map',
-    r'\bselect\b': 'filter',
-    r'\barranged\b': 'sorted',
-    r'\baccess\b': 'open',
-    r'\bassist\b': 'help',
-    r'\bisofkind\b': 'isinstance',
-    r'\battributes\b': 'dir',
-
-    # Class Definition
-    r'\bblueprint\b': 'class',
 }
 
+
+# simpy_keywords = [
+#     'check', 'also', 'otherwise', 'loopwhile', 'repeat', 'break', 'continue',
+#     'create', 'giveback', 'whole', 'decimal', 'text', 'flag', 'array', 'map',
+#     'equals', 'notequals', 'greater', 'less', 'greaterequal', 'lessequal',
+#     'yes', 'no', 'both', 'either', 'nothaving', 'attempt', 'handle', 'afterall',
+#     'trigger', 'ensure', 'universal', 'outer', 'anon', 'produce', 'skipop',
+#     'include', 'outof', 'alias', 'using', 'be', 'notbe', 'inside', 'outside',
+#     'remove', 'display', 'length', 'getinput', 'kind', 'series', 'total',
+#     'maximum', 'minimum', 'absolute', 'approximate', 'itemize', 'combine',
+#     'apply', 'select', 'arranged', 'access', 'assist', 'isofkind', 'attributes',
+#     'blueprint',
+# ]
 simpy_keywords = [
-    'check', 'also', 'otherwise', 'loopwhile', 'repeat', 'break', 'continue',
-    'create', 'giveback', 'whole', 'decimal', 'text', 'flag', 'array', 'map',
-    'equals', 'notequals', 'greater', 'less', 'greaterequal', 'lessequal',
-    'yes', 'no', 'both', 'either', 'nothaving', 'attempt', 'handle', 'afterall',
-    'trigger', 'ensure', 'universal', 'outer', 'anon', 'produce', 'skipop',
-    'include', 'outof', 'alias', 'using', 'be', 'notbe', 'inside', 'outside',
-    'remove', 'display', 'length', 'getinput', 'kind', 'series', 'total',
-    'maximum', 'minimum', 'absolute', 'approximate', 'itemize', 'combine',
-    'apply', 'select', 'arranged', 'access', 'assist', 'isofkind', 'attributes',
-    'blueprint',
+    'check', 'also', 'otherwise', 'loopwhile', 'repeat',
+    'create', 'giveback', 'whole', 'decimal', 'text', 'array', 'map',
+    'equals', 'greater', 'less', 'yes', 'no', 'display'
 ]
 
 # Token specification
@@ -136,16 +173,40 @@ compiled_regex = re.compile(token_regex)
 # Function to tokenize Simpy code
 def tokenize_simpy_code(simpy_code):
     tokens = []
-    for mo in compiled_regex.finditer(simpy_code):
-        kind = mo.lastgroup
-        value = mo.group()
-        if kind == 'SKIP' or kind == 'NEWLINE' or kind == 'COMMENT':
-            continue
-        elif kind == 'IDENTIFIER' and value in simpy_keywords:
-            kind = 'KEYWORD'
-        elif kind == 'MISMATCH':
-            raise RuntimeError(f'Unexpected character {value!r}')
-        tokens.append((kind, value))
+    lines = simpy_code.split('\n')
+    identifier_count = 0
+
+    for line_num, line in enumerate(lines, 1):
+        position = 0
+        while position < len(line):
+            match = None
+            for token_type, pattern in token_specification:
+                regex = re.compile(pattern)
+                match = regex.match(line, position)
+                if match:
+                    value = match.group(0)
+                    if token_type == 'SKIP' or token_type == 'COMMENT':
+                        position = match.end()
+                        break
+                    elif token_type == 'IDENTIFIER' and value in simpy_keywords:
+                        token_type = 'KEYWORD'
+
+                    # Generate unique identifier for each token
+                    identifier_count += 1
+                    token_id = f"T{identifier_count}"
+
+                    tokens.append({
+                    'id': token_id,
+                    'type': token_type,
+                    'value': value,
+                    'line': line_num
+                    })
+                    position = match.end()
+                    break
+            if not match:
+                # Handle error or skip character
+                position += 1
+
     return tokens
 
 # Function to translate Simpy code to Python code with explanations
@@ -173,9 +234,9 @@ def translate_simpy_to_python(simpy_code):
         simpy_code = re.sub(simpy_keyword, python_keyword, simpy_code)
     return simpy_code
 
-# Sample Simpy Programs
+
 sample_programs = {
-    "Hello World": '''display("Hello, World!")''',
+"Hello World": '''display("Hello, World!")''',
 
     "Simple Function": '''create add_numbers(a, b):
     giveback a + b
@@ -199,91 +260,37 @@ loopwhile counter greater 0:
     counter = counter - 1
 display("Blast off!")''',
 
-    "Repeat (For Loop) Example": '''numbers = [1, 2, 3, 4, 5]
 
-repeat num inside numbers:
-    display("Number:", num)''',
 
-    "Working with Data Types": '''num1 = 10
-num2 = 3.14
-message = "Simpy is fun!"
-is_active = yes
+    "Data Types Example": '''# Whole number
+x = whole(10)
 
-display("Whole number:", num1)
-display("Decimal number:", num2)
-display("Message:", message)
-display("Is Active:", is_active)''',
+# Decimal number
+y = decimal(3.14)
 
-    "Using Arrays and Maps": '''fruits = ["apple", "banana", "cherry"]
-ages = {"Alice": 30, "Bob": 25}
+# Text
+name = text("John")
 
-display("Fruits:", fruits)
-display("Ages:", ages)''',
+# Flag
+is_valid = yes
 
-    "Function with Loop": '''create factorial(n):
-    result = 1
-    repeat i inside series(1, n + 1):
-        result = result * i
-    giveback result
+# Array
+numbers = array([1, 2, 3])
 
-number = 5
-display("Factorial of", number, "is", factorial(number))''',
+# Map
+person = map({"name": "John", "age": 30})
 
-    "Nested Control Structures": '''number = 7
+display(x, y, name, is_valid, numbers, person)''',
 
-check number greater 1:
-    loopwhile number less 100:
-        display("Number is:", number)
-        number = number * 2''',
+    "Comparison Example": '''a = 5
+b = 10
 
-    "Handling Flags": '''is_raining = no
-
-check is_raining equals yes:
-    display("Take an umbrella.")
+check a less b:
+    display("a is less than b")
+also a equals b:
+    display("a equals b")
 otherwise:
-    display("Enjoy the sunshine!")''',
-
-    "Using Built-in Functions": '''name = getinput("Enter your name: ")
-display("Hello, " + name + "!")
-
-numbers = [1, 2, 3, 4, 5]
-size = length(numbers)
-display("The array has", size, "elements.")
-
-sum_of_numbers = total(numbers)
-display("The sum is:", sum_of_numbers)''',
-
-    "Apply and Select Functions": '''numbers = [1, 2, 3, 4, 5]
-
-# Double each number
-doubled = list(apply(anon x: x * 2, numbers))
-display("Doubled numbers:", doubled)
-
-# Select even numbers
-evens = list(select(anon x: x % 2 equals 0, numbers))
-display("Even numbers:", evens)''',
-
-    "Class Example": '''blueprint Person:
-    create __init__(self, name):
-        self.name = name
-
-    create greet(self):
-        display("Hello, " + self.name)
-
-person = Person("Alice")
-person.greet()''',
-
-    "Exception Handling": '''attempt:
-    number = getinput("Enter a number: ")
-    number = whole(number)
-    result = 100 / number
-    display("Result is:", result)
-handle ZeroDivisionError as e:
-    display("Cannot divide by zero.")
-handle ValueError as e:
-    display("Invalid input.")
-afterall:
-    display("Done.")''',
+    display("a is greater than b")'''
 }
 
 
@@ -772,25 +779,43 @@ def main():
     
     elif page == "Tokenization Process":
         st.header("Simpy Tokenization Process")
-        
+
         # Dropdown for sample programs
         sample_choice = st.selectbox("Choose a sample program:", ["(Write your own)"] + list(sample_programs.keys()))
-        
+
         if sample_choice != "(Write your own)":
             code_input = sample_programs[sample_choice]
         else:
             code_input = ""
-        
+
         # Code input area
         code_input = st.text_area("Enter Simpy code to tokenize:", value=code_input, height=300)
-        
+
         if st.button("Tokenize Code"):
             try:
                 tokens = tokenize_simpy_code(code_input)
                 st.subheader("Tokens")
+
+                # Create DataFrame for better display
+                token_df = pd.DataFrame(tokens)
+                # Reorder columns for better presentation
+                token_df = token_df[['id', 'type', 'value', 'line']]
+                # Rename columns for display
+                token_df.columns = ['Token ID', 'Token Type', 'Value', 'Line Number']
+
                 # Display tokens in a table
-                token_df = [{"Token Type": kind, "Value": value} for kind, value in tokens]
                 st.table(token_df)
+
+                # Additional statistics
+                st.subheader("Tokenization Statistics")
+                st.write(f"Total tokens: {len(tokens)}")
+                st.write(f"Lines of code: {max(token['line'] for token in tokens)}")
+
+                # # Token distribution by type
+                # token_types = token_df['Token Type'].value_counts()
+                # st.write("\nToken distribution by type:")
+                # st.bar_chart(token_types)
+
             except Exception as e:
                 st.subheader("Error")
                 st.error(e)
