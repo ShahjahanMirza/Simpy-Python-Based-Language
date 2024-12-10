@@ -712,8 +712,6 @@ def display_tokenization_res_explanation():
     ## Conclusion
 
     Understanding the Regular Expressions used in the tokenizer helps in grasping how the Simpy compiler processes code. Each RE is carefully designed to match specific patterns in the code, ensuring accurate tokenization and paving the way for successful translation to Python.
-
-    If you have any questions or need further clarification on any of the REs, feel free to ask!
     """)
     
 # Main function to run the Streamlit app
