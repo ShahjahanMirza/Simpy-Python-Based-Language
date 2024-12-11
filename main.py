@@ -154,7 +154,7 @@ keyword_mapping = {
 simpy_keywords = [
     'check', 'also', 'otherwise', 'loopwhile', 'repeat',
     'create', 'giveback', 'whole', 'decimal', 'text', 'array', 'map',
-    'equals', 'greater', 'less', 'yes', 'no', 'display','greaterequal', 'lessequal',
+    'equals', 'greater', 'less', 'yes', 'no', 'display', 'greaterequal', 'lessequal',
     'notequals',
 ]
 
@@ -716,6 +716,7 @@ def display_tokenization_res_explanation():
     ## Conclusion
 
     Understanding the Regular Expressions used in the tokenizer helps in grasping how the Simpy compiler processes code. Each RE is carefully designed to match specific patterns in the code, ensuring accurate tokenization and paving the way for successful translation to Python.
+
     """)
     
 # Main function to run the Streamlit app
@@ -764,6 +765,40 @@ def main():
             finally:
                 # Reset stdout
                 sys.stdout = old_stdout
+        st.write("""
+                ### Control Keyword
+                check: if |
+                also: elif |
+                otherwise: else |
+                loopwhile: while |
+                repeat: fo |
+
+                ### Function Definition and Return
+                create: def |
+                giveback: return |
+
+                ### Data Types
+                whole: int |
+                decimal: float |
+                text: st |
+                array: list |
+                map: dict |
+
+                ### Comparison Operators
+                equals: == |
+                greater: > |
+                less: < |
+                greaterequal: >= |
+                lessequal: <= |
+                notequals: != |
+
+                ### Logical Values
+                yes: True |
+                no: False |
+
+                ### Built-in Functions
+                display: print
+                """)
 
     elif page == "Language Documentation":
         st.header("Simpy Language Documentation")
