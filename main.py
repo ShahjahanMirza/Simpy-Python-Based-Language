@@ -126,6 +126,9 @@ keyword_mapping = {
     r'\bequals\b': '==',
     r'\bgreater\b': '>',
     r'\bless\b': '<',
+    r'\bgreaterequal\b': '>=',
+    r'\blessequal\b': '<=',
+    r'\bnotequals\b': '!=',
 
     # Logical Values
     r'\byes\b': 'True',
@@ -151,7 +154,8 @@ keyword_mapping = {
 simpy_keywords = [
     'check', 'also', 'otherwise', 'loopwhile', 'repeat',
     'create', 'giveback', 'whole', 'decimal', 'text', 'array', 'map',
-    'equals', 'greater', 'less', 'yes', 'no', 'display'
+    'equals', 'greater', 'less', 'yes', 'no', 'display','greaterequal', 'lessequal',
+    'notequals',
 ]
 
 # Token specification
